@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 IP = "192.168.33.10"
-NOMAD_VERSION = "0.6.0"
+NOMAD_VERSION = "0.7.0"
 NOMAD_PORT_GUEST = 4646
 NOMAD_PORT_HOST = 4646
 
@@ -51,7 +51,16 @@ if [ $(pgrep nomad) ]
     echo "Nomad running"
   else
     echo "Starting Nomad"
-    nohup nomad agent -dev -bind #{IP} -node pynomad1 > /dev/null 2>&1 &
+
+    MAJOR_VERSION=`echo #{NOMAD_VERSION} | cut -d "." -f 2`
+
+    if [ $MAJOR_VERSION -gt 6 ]; then
+        echo "Nomad version $NOMAD_VERSION supports acls"
+        nohup nomad agent -dev -bind #{IP} -node pynomad1 -acl-enabled > /dev/null 2>&1 &
+    else
+        nohup nomad agent -dev -bind #{IP} -node pynomad1 > /dev/null 2>&1 &
+    fi
+
     sleep 30
 fi
 
