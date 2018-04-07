@@ -112,4 +112,4 @@ class Node(object):
               - nomad.api.exceptions.BaseNomadException
               - nomad.api.exceptions.URLNotFoundNomadException
         """
-        return self._post(id, "drain", enable={"enable": enable})
+        return self._post(id, "drain", enable={"enable": True})
